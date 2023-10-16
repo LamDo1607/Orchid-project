@@ -1,0 +1,320 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Gallery</title>
+<style>
+.header .lead {
+  max-width: 620px;
+}
+
+/** Below CSS is completely optional **/
+
+#gallery {
+    display: flex;
+    width: 100%;
+    padding: 0px 5px;
+}
+.column {
+    width: 25%;
+    padding: 5px;
+}
+.img{
+    width: 100%;
+    padding: 5px 0;
+}
+
+@media (max-width: 576px){
+    #gallery {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0px 5px;
+    }
+    .column {
+        width: 100%;
+        padding: 5px;
+    }
+}
+
+</style>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div id="bodyGallery" class="card">
+            <div class="header d-flex flex-column align-items-center">
+                <h1 class="display-6 mt-3 mb-0">Phòng trưng bày</h1>
+                <div id="gallery" class="aniimated-thumbnials">
+                    <div class="column">
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture1.jpg">
+                            <img class="img" src="/static/images/orchid/Picture1.jpg" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture2.png">
+                            <img class="img" src="/static/images/orchid/Picture2.png" />
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture3.png">
+                            <img class="img" src="/static/images/orchid/Picture3.png" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture6.png">
+                            <img class="img" src="/static/images/orchid/Picture6.png" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture7.png">
+                            <img class="img" src="/static/images/orchid/Picture7.png" />
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture8.png">
+                            <img class="img" src="/static/images/orchid/Picture8.png" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture9.png">
+                            <img class="img" src="/static/images/orchid/Picture9.png" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture17.jpg">
+                            <img class="img" src="/static/images/orchid/Picture17.jpg" />
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture19.jpg">
+                            <img class="img" src="/static/images/orchid/Picture19.jpg" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture18.jpg">
+                            <img class="img" src="/static/images/orchid/Picture18.jpg" />
+                        </a>
+                        <a class="orchid" data-lg-size="1600-1067" data-src="/static/images/orchid/Picture15.jpg">
+                            <img class="img" src="/static/images/orchid/Picture15.jpg" />
+                        </a>
+                    </div>
+                </div>  
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_servicePack = ""
+g_purpose = ""
+g_userLevel = ""
+var g_users = null
+
+$(document).ready(function () {
+    $('.aniimated-thumbnials').lightGallery({
+                thumbnail: true,
+                selector: 'a'
+            });
+});
+
+
+
+$("div#div_role :input").attr("disabled", true);
+// $("div#div_intro :input").attr("disabled", true);
+// $("div#div_tax :input").attr("disabled", true);
+// $("div#div_bank :input").attr("disabled", true);
+
+
+
+function FillStatus() {
+    $('#cb_status').append($("<option></option>").attr("value", "all").text("Tất cả"));
+    $('#cb_status').append($("<option></option>").attr("value", "Registered").text("Registered"));
+    $('#cb_status').append($("<option></option>").attr("value", "Verified").text("Verified"));
+    $('#cb_status').append($("<option></option>").attr("value", "Approved").text("Approved"));
+    $('#cb_status').append($("<option></option>").attr("value", "Suspend").text("Suspend"));
+    $('#cb_status').append($("<option></option>").attr("value", "Invited").text("Invited"));
+}
+
+$("#btn_search").click(function () {
+    GetUserList()
+});
+
+function GetUserList() {
+    $('#result_table > tbody tr').remove()
+    request_data = {
+        "level": "Admin",
+        "group_id": $('#cb_groupAndOrg').find(":selected").val(),
+        "search_string": $("#txt_search").val(),
+        "status": $('#cb_status').find(":selected").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/user/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+function onSearchSuccess(res) {
+    var index = 1
+    g_users = res.objects
+    if(g_users.length == 0)
+    {
+        ShowToast("Không tìm thấy user")
+    }
+    for (i = 0; i < g_users.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_users[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(user, order) {
+    row = '<tr class="trow" id="' + user._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + user.email + "</td>" +
+        "<td>" + user.fullname + "</td>" +
+        "<td>" + user.status + "</td>" +
+        "<td>" + (user.timekeeper ? "Có" : "Không") + "</td>" +
+        "<td>" + user.servicePack + "</td>" +
+        "<td>" + user.orgName + "</td>" +
+        "<td>" + user.numGateAccount + "</td>" +
+        "<td>" + user.numPerson + "</td>" +
+        "<td>" + datetimeConverter(user.timeUpdate) + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+
+    user = GetObjectByPk(g_users, this.id)
+
+    $("#txt_email").val(user.email)
+    $("#txt_fullname").val($(this).closest("tbody tr").find('td:eq(2)').text())
+
+    document.getElementById("chk_timekeeper").checked = $(this).closest("tbody tr").find('td:eq(4)').text() == "Có"
+
+    g_servicePack = $(this).closest("tbody tr").find('td:eq(5)').text()
+    $("input[name=servicePack][value=" + g_servicePack + "]").prop('checked', true);
+
+    $("#btn_delete").show()
+    $("#btn_update").show()
+    $("#btn_approve").show()
+
+    if (user == null) {
+        showError("Không lấy được thông tin member, vui lòng tìm kiếm lại!")
+        return
+    }
+
+
+    $("#cb_group_popup").val("")
+    $("#cb_org_popup").val("")
+
+
+
+    OnLevelSelected()
+
+    $("#txt_phone").val(user.phone)
+    $("#txt_introOrg").val(user.introOrg)
+    $("#txt_address").val(user.address)
+    $("#txt_personalID").val(user.personalID + "\n" + dateConverter(user.personalIDdate) + "\n" + user.personalIDplace)
+    $("#txt_represent").val(user.represent)
+    $("#txt_position").val(user.position)
+    $("#txt_tax").val(user.tax)
+    $("#txt_bankAccount").val(user.bankNumber + "\n" + user.bankAccountName + "\n" + user.bankBranch)
+
+    //Show modal
+    $("#modal_user").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    $("#btn_delete").hide()
+    $("#btn_update").hide()
+    $("#btn_approve").hide()
+
+    document.getElementById("frm_edit").reset();
+
+    if (g_userLevel == "Admin") {
+        document.getElementById("lbl_modal_title").innerText = "Tạo tài khoản cổng"
+    }
+
+    $("#modal_user").modal()
+})
+
+$("#btn_update").click(function () {
+    request_data = {
+        "email": $("#txt_email").val(),
+        "group_id": $('#cb_group_popup').find(":selected").val(),
+        "orgName": $('#cb_org_popup').find(":selected").val(),
+        "status": "Approved",
+        "timekeeper": (document.getElementById("chk_timekeeper").checked ? "True" : "False"),
+        "servicePack": g_servicePack,
+        "token": Cookies.get("token")
+    }
+
+    host_request = gethost() + '/api/user/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    document.getElementById("frm_edit").reset();
+    $("#modal_user").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetUserList()
+}
+
+$("#btn_approve").click(function () {
+    //reset password api
+    request_data = {
+        "status": "Approved",
+        "email": $("#txt_email").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/user/update"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+$("#btn_delete").click(function () {
+    //remove user
+    request_data = {
+        "email": $("#txt_email").val(),
+        "suspendReason": $("#txt_suspendReason").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/user/removeUser"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_user").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetUserList()
+}
+
+
+$('#cb_level_popup').on('change', function () {
+    OnLevelSelected()
+});
+
+function OnLevelSelected() {
+    var level = $("#cb_level_popup").find(":selected").val()
+    if (level == "Partner") {
+        $("div#div_group :input").attr("disabled", true);
+    }
+    else if (level == "Staff" || level == "Mod") {
+        $("div#div_group :input").attr("disabled", false);
+    }
+    else {
+        $("div#div_group :input").attr("disabled", true);
+    }
+}
+
+
+
+$("input[name='purpose']").change(function (e) {
+    g_purpose = $(this).val()
+});
+
+$("input[name='servicePack']").change(function (e) {
+    g_servicePack = $(this).val()
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  {% block head %}
+  <title>Base</title>
+  {% endblock %}
+
+  <!--favicon-->
+  {% if debug %}
+  <link rel="shortcut icon" type="image/x-icon" href="/static/img/bug.ico">
+  {% else %}
+  <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico">
+  {% endif %}
+  <!-- Custom Fonts -->
+  <link href="/static/fontawesome/v5.15.3/css/all.css" rel="stylesheet">
+  <!-- Vector CSS -->
+  <link href="/static/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+  <!-- simplebar CSS-->
+  <link href="/static/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+  <!-- Bootstrap core CSS-->
+  <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- animate CSS-->
+  <link href="/static/assets/css/animate.css" rel="stylesheet" type="text/css" />
+  <!-- Sidebar CSS-->
+  <link href="/static/assets/css/sidebar-menu.css" rel="stylesheet" />
+  <!-- Custom Style-->
+  <link href="/static/assets/css/app-style.css" rel="stylesheet" />
+  <!-- toast animation-->
+  <link href="/static/css/animate.min.css" rel="stylesheet">
+  <link href="/static/lightgallery/lightgallery.css" rel="stylesheet">
+  <!-- tippy js -->
+  <link href="/static/tippyjs-5.2.1/animations/perspective.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/animations/scale.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/animations/shift-away.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/animations/shift-toward.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/themes/light-border.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/themes/light.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/themes/material.css" rel="stylesheet" />
+  <link href="/static/tippyjs-5.2.1/themes/translucent.css" rel="stylesheet" />
+  <!-- Sweetalert Css -->
+  <link href="/static/sweetalert/sweetalert.css" rel="stylesheet" />
+  <!-- modal -->
+  <link href="/static/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/dist/css/sb-admin-2.min.css" rel="stylesheet">
+  <!-- custom css -->
+  <link href="/static/css/facemon.css" rel="stylesheet">
+  <!-- Icons CSS-->
+  <link href="/static/assets/css/icons.css" rel="stylesheet" type="text/css" />
+  <!-- datatables -->
+  <link href="/static/datatables/datatables.min.css" rel="stylesheet"/>
+  <!-- jodit editor -->
+  <link href="/static/jodit/jodit.css" rel="stylesheet">
+  <link href="/static/jodit/jodit.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-theme bg-theme5">
+
+  <!-- Start wrapper-->
+  <div id="wrapper">
+
+    <!--Start sidebar-wrapper-->
+    <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
+      <div class="brand-logo">
+        <a href="/">
+          <img src="/static/img/logo_orchid_simple.png" class="logo-icon" alt="logo icon">
+          <h5 class="logo-text">Orchid database</h5>
+        </a>
+      </div>
+      <ul class="sidebar-menu do-nicescrol">
+        <li>
+          <a href="/predict"><i class="fa fa-coffee"></i><span>Detect beverage</span></a>
+        </li>
+        <li>
+          <a href="/histories"><i class="fas fa-list-ol"></i> <span>Histories</span></a>
+        </li>
+        <li>
+          <a href="/users"><i class="fas fa-user"></i> <span>Users</span></a>
+        </li>
+        <li>
+          <a href="/gallery"><i class="fas fa-images"></i> <span>Gallery</span></a>
+        </li>
+        <li>
+          <a href="/orgs"><i class="fas fa-university"></i><span>Danh sách tổ chức</span></a>
+        </li>
+        <li>
+          <a href="/store"><i class="fas fa-store"></i> <span>Store</span></a>
+        </li>
+        <li>
+          <a href="/option"><i class="fa fa-cog"></i> <span>Option</span></a>
+        </li>
+        <li>
+          <a href="/orchid"><i class="fas fa-spa"></i> Danh sách hoa Lan</span></a>
+        </li>
+        <li>
+          <a href="/species"><i class="fas fa-seedling"></i> Danh sách giống lan</span></a>
+        </li>
+        <li>
+          <a href="/location"><i class="fas fa-list-ol"></i> <span>Location</span></a>
+        </li>
+        <li>
+          <a href="/activity"><i class="fas fa-history"></i> <span>Lịch sử hoạt động</span></a>
+        </li>
+        <li>
+          <a href="/log/"><i class="fas fa-history"></i> System log</a>
+        </li>
+        <li>
+          <a href="/config/"><i class="fa fa-server"></i>Server management</a>
+        </li>
+        <li>
+          <a href="/systeminfo/"><i class="fa fa-desktop"></i>System info</a>
+        </li>
+        <li>
+          <a href="/diag/"><i class="fas fa-stethoscope"></i>Diag</a>
+        </li>
+      </ul>
+
+    </div>
+    <!--End sidebar-wrapper-->
+
+    <!--Start topbar header-->
+    <header class="topbar-nav">
+      <nav class="navbar navbar-expand fixed-top">
+        <ul class="navbar-nav mr-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link toggle-menu" href="javascript:void();">
+              <i class="icon-menu menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <form class="search-bar">
+              <input type="text" class="form-control" placeholder="Enter keywords">
+              <a href="javascript:void();"><i class="icon-magnifier"></i></a>
+            </form>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav align-items-center right-nav-link">
+          <li class="nav-item dropdown-lg">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
+              href="javascript:void();">
+              <i class="fa fa-envelope-open-o"></i></a>
+          </li>
+          <li class="nav-item dropdown-lg">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
+              href="javascript:void();">
+              <i class="fa fa-bell-o"></i></a>
+          </li>
+          <li class="nav-item language">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
+              href="javascript:void();"><i class="fa fa-flag"></i></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li class="dropdown-item"> <i class="flag-icon flag-icon-gb mr-2"></i> English</li>
+              <!-- <li class="dropdown-item"> <i class="flag-icon flag-icon-fr mr-2"></i> French</li>
+          <li class="dropdown-item"> <i class="flag-icon flag-icon-cn mr-2"></i> Chinese</li> -->
+              <li class="dropdown-item"> <i class="flag-icon flag-icon-vn mr-2"></i> Vietnam</li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+              <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle"
+                  alt="user avatar"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" style="width: 300px;">
+              <li class="dropdown-item user-details">
+                  <div class="media">
+                    <div class="media-body">
+                      <h6 class="mt-2 user-title">Vo Hung Vi</h6>
+                      <p class="user-subtitle">vohungvi@vohungvi.com</p>
+                    </div>
+                  </div>
+              </li>
+              
+              <a href="/profile">
+                <li class="dropdown-item"><i class="fa fa-user"></i> Profile</li>
+              </a>
+              <a href="/changepassword">
+                <li class="dropdown-item"><i class="fa fa-key"></i> change Password</li>
+              </a>
+              <li class="dropdown-divider"></li>
+              <a href="/logout">
+                <li class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</li>
+              </a>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <!--End topbar header-->
+
+    <div class="clearfix"></div>
+
+    <div class="content-wrapper">
+      <div class="container-fluid">
+
+
+        {% block body %}
+
+        {% endblock %}
+
+        <div class="overlay toggle-menu"></div>
+
+      </div>
+      <!-- End container-fluid-->
+
+    </div><!--End content-wrapper-->
+    <!--Start Back To Top Button-->
+    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    <!--End Back To Top Button-->
+
+  </div><!--End wrapper-->
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/static/assets/js/jquery.min.js"></script>
+  <script src="/static/assets/js/popper.min.js"></script>
+  <!-- Bootstrap Core JavaScript -->
+  <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- simplebar js -->
+  <script src="/static/assets/plugins/simplebar/js/simplebar.js"></script>
+  <!-- sidebar-menu js -->
+  <script src="/static/assets/js/sidebar-menu.js"></script>
+  <!-- loader scripts -->
+  <script src="/static/assets/js/jquery.loading-indicator.js"></script>
+  <!-- Custom scripts -->
+  <script src="/static/assets/js/app-script.js"></script>
+  <script src="/static/lightgallery/lightgallery-all.js"></script>
+  <!-- Chart js -->
+  <!-- <script src="assets/plugins/Chart.js/Chart.min.js"></script> -->
+  <script src="/static/js/BarChart/analytics.js"></script>
+  <script src="/static/js/BarChart/Chart.min.js"></script>
+  <script src="/static/js/BarChart/utils.js"></script>
+
+  <script src="/static/tippyjs-5.2.1/dist/popper.min.js"></script>
+  <script src="/static/tippyjs-5.2.1/dist/tippy-bundle.iife.min.js"></script>
+  <script src="/static/js/js.cookie.js"></script>
+  <script src="/static/js/tgmt_image.js"></script>
+  <script src="/static/js/raspango.js"></script>
+  <script src="/static/js/bootstrap-notify.min.js"></script>
+  <script src="/static/js/tgmt_image.js"></script>
+  <!-- SweetAlert Plugin Js -->
+  <script src="/static/sweetalert/sweetalert.min.js"></script>
+
+  <!-- datatables -->
+  <script src="/static/datatables/datatables.min.js"></script>
+  <!-- jodit editor -->
+  <script src="/static/jodit/jodit.js" ></script>
+  <script src="/static/jodit/jodit.min.js" ></script>
+
+  <script>
+    $(document).keyup(function (e) {
+      if (e.key === "Escape") {
+        $(".modal").modal('hide')
+      }
+    });
+
+    $(document).ready(function () {
+      sethost("{{request.META.HTTP_HOST}}")
+
+
+      //ShowTotalNotification()
+
+      function ShowTotalNotification() {
+        if (Cookies.get("token") == null || Cookies.get("token") == "")
+          return
+        request_data = {
+          "token": Cookies.get("token"),
+          "status": "unseen"
+        }
+
+        host_request = gethost() + '/api/notification/getList'
+        ajaxRequest("POST", host_request, request_data, onGetNotificationSuccess, null)
+      }
+
+      function onGetNotificationSuccess(res) {
+        document.getElementById("lbl_numNotification").innerText = res.length
+      }
+    });
+
+  </script>
+</body>
+{% block scripts %}
+<script></script>
+{% endblock %}
+
+</html>

@@ -1,0 +1,409 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách tổ chức</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách tổ chức
+                <button id ="btn_showModal" class="btn btn-success btn-default">
+                    <span class="fa fa-plus"></span> Thêm tổ chức</button>  
+                <div class="row" style="padding:10px 0 0 10px">
+                    <!-- <div class="form-group col-md-2" style="padding: 0px;">                              
+                        <select class="form-control" id="cb_org"></select>
+                    </div> -->
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="email/phone" name="text" id='txt_search' class="form-control "> 
+                    </div>                
+                    <div class="col-md-2">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                            
+                    </div>
+                 
+                  
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên tổ chức</th>
+                            <th>Địa chỉ</th>
+                            <th>Số điện thoại</th>
+                            <th>Người đại diện</th>
+                            <th>Chức vụ</th>
+                            <th>Số điện thoại đại diện</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_org" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header panel-heading">                
+                <h3 class="modal-title" id="lbl_modal_title">Cập nhật tài khoản</h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên tổ chức *</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-university"></i></span>
+                            <input type="text" class="form-control" id="txt_orgname" placeholder="Nhập tên tổ chức">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Địa chỉ</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="txt_address" placeholder="Nhập địa chỉ">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Số điện thoại</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                            <input type="number" class="form-control" id="txt_phone1" placeholder="Nhập số điện thoại">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Người đại diện*</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="txt_manager" placeholder="Nhập người đại diện">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Chức vụ</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-user-tag    "></i></span>
+                            <input type="text" class="form-control" id="txt_position" placeholder="Nhập chức vụ">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Số điện thoại người đại diện</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group ">
+                            <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="txt_phone2" placeholder="Nhập số điện thoại">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" >
+                    <div style=" margin-bottom: 30px;">
+                        <button id ="btn_delete" class="btn btn-default btn-danger"><span class="fas fa-trash"></span> Xóa</button>
+                        <button id ="btn_update" class="btn btn-default btn-success pull-right"><span class="fa fa-save"></span> Cập nhật</button>
+                        <button id ="btn_create" class="btn btn-default btn-success pull-right"><span class="fa fa-plus"></span> Thêm tổ chức</button>
+                    </div>
+                </div>
+                
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_org_pk = ""
+g_purpose = ""
+g_orgLevel = ""
+var g_orgs = null
+
+$(document).ready(function () {
+    // FillStatus()
+    GetOrgList()
+  //  FillOrg()
+    //console.log(Cookies.get("token"))
+});
+
+// function FillOrg() {
+//     $('#cb_org').append($("<option></option>").attr("value", "all").text("Tất cả tổ chức"));
+//     //$('#cb_org2').append($("<option></option>").attr("value", "all").text("Tất cả tổ chức"));
+
+  
+// }
+
+$("#btn_showModal").click(function(){
+    g_user_pk = ""
+    $("#txt_orgname").val("")
+    $("#txt_address").val("")
+    $("#txt_phone1").val("")
+    $("#txt_manager").val("")
+    $("#txt_position").val("")
+    $("#txt_phone2").val("")
+    
+    $("#btn_update").show("")
+    $("#btn_delete").show("")
+    $("#btn_create").show("")
+    $("#modal_org").modal()
+})
+
+$("#btn_create").click(function(){
+   // host_request = gethost() + '/api/org/update'
+    request_data = {
+        "name" : $("#txt_orgname").val(),
+        "address" : $("#txt_address").val(),
+        "manager" : $("#txt_manager").val(),
+        "position" : $("#txt_position").val(),
+        "phone1" : $("#txt_phone1").val(),
+        "phone2" : $("#txt_phone2").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/org/update'
+    ajaxRequest("POST", host_request, request_data, onCreateSuccess, genericFailCB)
+
+})
+
+function onCreateSuccess(res){
+    ShowToast("Thêm tổ chức thành công")
+    GetOrgList()
+
+    $("#modal_org").modal('hide')
+}
+
+// $("div#div_role :input").attr("disabled", true);
+// $("div#div_intro :input").attr("disabled", true);
+// $("div#div_tax :input").attr("disabled", true);
+// $("div#div_bank :input").attr("disabled", true);
+
+
+
+// function FillStatus() {
+//     $('#cb_status').append($("<option></option>").attr("value", "all").text("Tất cả"));
+//     $('#cb_status').append($("<option></option>").attr("value", "Registered").text("Registered"));
+//     $('#cb_status').append($("<option></option>").attr("value", "Verified").text("Verified"));
+//     $('#cb_status').append($("<option></option>").attr("value", "Approved").text("Approved"));
+//     $('#cb_status').append($("<option></option>").attr("value", "Suspend").text("Suspend"));
+//     $('#cb_status').append($("<option></option>").attr("value", "Invited").text("Invited"));
+// }
+
+$("#btn_search").click(function () {
+    GetOrgList()
+});
+
+
+
+function GetOrgList() {
+    $('#result_table > tbody tr').remove()
+    
+    request_data = {
+        "level": "Admin",
+        //"manager" : $("#txt_manager").val(),
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    
+    host_request = gethost() + '/api/org/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+
+function onSearchSuccess(res) {
+
+    var index = 1
+    g_orgs = res.objects
+
+    if(g_orgs.length == 0)
+    {
+        ShowToast("Không tìm thấy tổ chức")
+    }
+    for (i = 0; i < g_orgs.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_orgs[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(org, order) {
+    row = '<tr class="trow" id="' + org._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + org.name + "</td>" +
+        "<td>" + (org.address ? org.address : "")+ "</td>" +
+        "<td>" + (org.phone1 ? org.phone1 : "") + "</td>" +
+        "<td>" + org.manager + "</td>" + 
+        "<td>" + (org.position ? org.position : "") + "</td>" + 
+        "<td>" + (org.phone2 ? org.phone2 : "") + "</td>" +
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+    g_org_pk = this.id
+    org = GetObjectByPk(g_orgs, this.id)
+    //console.log(org)
+
+    $("#txt_orgname").val(org.name)
+    $("#txt_address").val(org.address),
+    $("#txt_manager").val(org.manager),
+    $("#txt_position").val(org.position),
+    $("#txt_phone1").val(org.phone1),
+    $("#txt_phone2").val(org.phone2),
+    $("#btn_delete").show()
+    $("#btn_update").show()
+    $("#btn_create").hide()
+   // $("#btn_approve").show()
+
+    if (org == null) {
+        showError("Không lấy được thông tin member, vui lòng tìm kiếm lại!")
+        return
+    }
+
+    $("#cb_group_popup").val("")
+    $("#cb_org_popup").val("")
+
+    OnLevelSelected()
+
+    $("#txt_phone").val(org.phone)
+    $("#txt_introOrg").val(org.introOrg)
+    $("#txt_address").val(org.address)
+    $("#txt_personalID").val(org.personalID + "\n" + dateConverter(org.personalIDdate) + "\n" + org.personalIDplace)
+    $("#txt_represent").val(org.represent)
+    $("#txt_position").val(org.position)
+    $("#txt_tax").val(org.tax)
+    $("#txt_bankAccount").val(org.bankNumber + "\n" + org.bankAccountName + "\n" + org.bankBranch)
+
+    //Show modal
+    $("#modal_org").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    $("#btn_delete").hide()
+    $("#btn_update").hide()
+    $("#btn_approve").hide()
+
+
+    $("#modal_org").modal()
+})
+
+$("#btn_update").click(function () {
+    request_data = {
+        "pk" : g_org_pk,
+        "name" : $("#txt_orgname").val(),
+        "manager" : $("#txt_manager").val(),
+        "address" : $("#txt_address").val(),
+        "position" : $("#txt_position").val(),
+        "phone1" : $("#txt_phone1").val(),
+        "phone2" : $("#txt_phone2").val(),
+        "token": Cookies.get("token")
+    }
+
+    host_request = gethost() + '/api/org/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    //document.getElementById("frm_edit").reset();
+    $("#modal_org").modal('hide')
+  
+   // $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetOrgList()
+}
+
+$("#btn_approve").click(function () {
+    //reset password api
+    request_data = {
+        "status": "Approved",
+        "email": $("#txt_email").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/org/update"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+$("#btn_delete").click(function () {
+    //remove org
+    request_data = {
+        "pk" : g_org_pk,
+        "name" : $("#txt_orgname").val(),
+        "manager" : $("#txt_manager").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/org/delete"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_org").modal('hide')
+    $('#result_table > tbody tr').remove()
+    ShowToast(res["Success"])
+    GetOrgList()
+}
+
+
+$('#cb_level_popup').on('change', function () {
+    OnLevelSelected()
+});
+
+function OnLevelSelected() {
+    var level = $("#cb_level_popup").find(":selected").val()
+    if (level == "Partner") {
+        $("div#div_group :input").attr("disabled", true);
+    }
+    else if (level == "Staff" || level == "Mod") {
+        $("div#div_group :input").attr("disabled", false);
+    }
+    else {
+        $("div#div_group :input").attr("disabled", true);
+    }
+}
+
+
+
+$("input[name='purpose']").change(function (e) {
+    g_purpose = $(this).val()
+});
+
+$("input[name='servicePack']").change(function (e) {
+    g_servicePack = $(this).val()
+});
+
+</script>
+
+{% endblock %}

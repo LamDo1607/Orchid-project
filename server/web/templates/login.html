@@ -1,0 +1,148 @@
+{% extends 'base_dashtreme_full_width.html' %}
+{% block head %}
+<title>Login</title>
+<style>
+    .fa{
+        color: #f3f5f7;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="loader-wrapper">
+    <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<div class="card card-authentication1 mx-auto my-5">
+    <div class="card-body">
+        <div class="card-content p-2">
+            <div class="text-center" style="margin-bottom: 20px;">
+                <img src="/static/img/logo_orchid.png" alt="logo icon">
+                </br></br>
+                <h4>Cơ sở dữ liệu Hoa Lan</h4>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label  class="sr-only">Username</label>
+                    <div class="position-relative has-icon-right">
+                        <input type="text" id="txt_email" class="form-control" placeholder="Email">
+                        <div class="form-control-position">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">Password</label>
+                    <div class="position-relative has-icon-right">
+                        <input type="password" id="txt_password" class="form-control" placeholder="Enter Password">
+                        <div class="form-control-position"><i class="fa fa-key" ></i></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <div class="icheck-material-white">
+                            <input type="checkbox" id="user-checkbox" checked="" />
+                            <label for="user-checkbox">Remember me</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-6 text-right" style="margin-top: 10px;">
+                        <a style="color: #fff;" href="reset-password.html">Reset Password</a>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <span id="lbl_message"></span>
+                    </div>
+                </div>
+                <button id="btn_login" type="button" class="btn btn-light btn-block">Sign In</button>
+                <!-- <div class="text-center mt-3">Sign In With</div>
+
+                <div class="form-row mt-4">
+                    <div class="form-group mb-0 col-6">
+                        <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i>
+                            Facebook</button>
+                    </div>
+                    <div class="form-group mb-0 col-6 text-right">
+                        <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i>
+                            Twitter</button>
+                    </div>
+                </div> -->
+
+            </form>
+        </div>
+    </div>
+    <div class="card-footer text-center py-3">
+        <p class="text-warning mb-0">Do not have an account? <a style="color: #fff;" href="/register"> Sign Up here</a></p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+<script>
+$(document).ready(function () {
+    
+});
+
+function Login() {
+
+    if ($("#txt_email").val() == "" ||
+        $("#txt_password").val() == "") {
+        showError("Thiếu email hoặc password")
+        return
+    }
+    request_data = {
+        "email": $("#txt_email").val(),
+        "password": $("#txt_password").val()
+    }
+    host_request = gethost() + '/api/user/login'
+    ajaxRequest("POST", host_request, request_data, onLoginSuccess, genericFailCB)
+}
+
+function onLoginSuccess(res) {
+    Cookies.set('email', res["email"], { expires: 365 });
+    Cookies.set('token', res["token"], { expires: 365 });
+    window.location.href = "/";
+}
+
+$("#btn_login").click(function () {
+    Login()
+});
+
+$(document).keydown(function (e) {
+    if (e.which == 13) {
+        Login()
+    }
+})
+
+$("#btn_resetPassword").click(function () {
+    if ($("#txt_email2").val() == "") {
+        showError("Chưa nhập email")
+        return
+    }
+    request_data = {
+        "email": $("#txt_email2").val()
+    }
+    host_request = gethost() + '/api/user/SendEmailResetPassword'
+    ajaxRequest("POST", host_request, request_data, onSendSuccess, onLoginFailed)
+});
+
+function onSendSuccess(res) {
+    showNotice(res["Success"])
+    $("#reset_password_modal").modal("hide")
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+from . import views
+from django.conf.urls import url
+
+urlpatterns = [
+    url(r'^user/login$', views.login, name='login'),
+    url(r'^user/logout$', views.logout, name='logout'),    
+    url(r'^user/changepassword$', views.ChangePassword, name='ChangePassword'),
+    url(r'^user/register$', views.Register, name='Register'),
+    url(r'^user/get$', views.GetUser),
+    url(r'^user/gets$', views.GetUserList),
+    url(r'^user/update$', views.UpdateUser),
+    url(r'^user/changePassword$', views.ChangePassword),
+    url(r'^loginsession/get$', views.GetLoginSession, name='GetLoginSession'),
+    url(r'^loginsession/verifyToken$', views.verifyToken, name='verifyToken'),
+    url(r'^loginsession/redirect$', views.Redirect),
+    url(r'^webcam/stop$', views.StopWebcam),
+    url(r'^opencv/detectface$', views.DetectFace),
+    url(r'^beverage/detect$', views.DetectBeverage),
+    url(r'^history/gets$', views.GetHistoryList),
+    url(r'^orchid/update$', views.UpdateOrchid),
+    url(r'^orchid/gets$', views.GetOrchidList),
+    url(r'^orchid/delete$', views.DeleteOrchid),
+    url(r'^location/gets$', views.GetLocationList),
+    url(r'^location/delete$', views.DeleteLocation),
+    url(r'^location/update$', views.UpdateLocation),
+    url(r'^org/gets$', views.GetOrgs),
+    url(r'^org/delete$', views.RemoveOrg),
+    url(r'^org/update$', views.UpdateOrg),
+    url(r'^activity/gets$', views.GetActivityList),
+    url(r'^activity/add$', views.AddActivity),
+    url(r'^species/update$', views.UpdateSpecies),
+    url(r'^species/delete$', views.RemoveSpecies),
+    url(r'^species/gets$', views.GetSpecies),
+    url(r'^file/jotditUpload$', views.JoditUpload),
+    url(r'^log/gets$', views.GetLogList),
+    url(r'^activity/add$', views.AddActivity)
+]

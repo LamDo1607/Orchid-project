@@ -1,0 +1,304 @@
+{% extends 'base_dashtreme.html' %}
+{% block head %}
+<title>Danh sách giống Lan</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">Danh sách giống Lan
+                <button id ="btn_showModal" class="btn btn-success btn-default">
+                    <span class="fa fa-plus"></span> Thêm giống</button>  
+                <div class="row" style="padding:10px 0 0 10px">
+                    <!-- <div class="form-group col-md-2" style="padding: 0px;">                              
+                        <select class="form-control" id="cb_org"></select>
+                    </div> -->
+                    <div class="form-group col-md-3">
+                        <input type="text" placeholder="Tìm kiếm" name="text" id='txt_search' class="form-control "> 
+                    </div>                
+                    <div class="col-md-2">
+                        <button id ="btn_search" class="btn btn-primary btn-default">
+                            <i class="fas fa-search"></i> Tìm kiếm</button>
+                            
+                    </div>
+                 
+                  
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="result_table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên tiếng việt</th>
+                            <th>Tên khoa học</th> 
+                                            
+                       
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--End Row-->
+
+
+<!-- modals -->
+
+<!-- edit modal-->
+<div class="modal fade" id="modal_species" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content color">
+            <div class="modal-header panel-heading">                
+                <h4 class="modal-title" id="lbl_modal_title">Cập nhật giống lan</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body panel-body">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên Tiếng Việt</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fas fa-university"></i></span>
+                            <input type="text" class="form-control" id="txt_vietnamesename" placeholder="Nhập tên tiếng việt">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Tên khoa học</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group pull-right">
+                            <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="txt_englishname" placeholder="Nhập tên khoa học">
+                        </div>
+                    </div>
+                </div> 
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label>Chi tiết</label>
+                    </div>
+                    <div class="col-md-12" style="color: #000 !important;">
+                        <div id="txt_detail"></div>
+                    </div>
+                </div> 
+                <div class="col-md-12" >
+                    <div style=" margin-bottom: 30px;">
+                        <button id ="btn_delete" class="btn btn-default btn-danger"><span class="fas fa-trash"></span> Xóa</button>
+                        <button id ="btn_update" class="btn btn-default btn-success pull-right"><span class="fa fa-save"></span> Cập nhật</button>
+                        <button id ="btn_create" class="btn btn-default btn-success pull-right"><span class="fa fa-plus"></span> Thêm</button>
+                    </div>
+                </div>
+                
+            </div> <!-- end modal body-->
+        </div>
+    </div>
+</div>
+
+<!-- edit modal end-->
+
+<!-- modals end -->
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+g_species_pk = ""
+//g_purpose = ""
+//g_orgLevel = ""
+var g_species = null
+
+const txt_detail = new Jodit('#txt_detail' ,{
+            uploader: {
+                url: '/api/file/jotditUpload'
+            }
+        });
+
+$(document).ready(function () {
+    GetSpeciesList()
+
+
+});
+
+
+
+$("#btn_showModal").click(function(){
+    g_species_pk = ""
+    
+    $("#txt_vietnamesename").val("")
+    $("#txt_englishname").val("")
+    txt_detail.value = ""
+
+
+    $("#btn_update").show("")
+    $("#btn_delete").show("")
+    $("#btn_create").show("")
+    $("#modal_species").modal()
+})
+
+$("#btn_create").click(function(){
+    request_data = {
+        "vietnamesename" : $("#txt_vietnamesename").val(),
+        "englishname" : $("#txt_englishname").val(),
+        "description" : txt_detail.value,
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + '/api/species/update'
+    ajaxRequest("POST", host_request, request_data, onCreateSuccess, genericFailCB)
+
+})
+
+function onCreateSuccess(res){
+    ShowToast("Thêm thành công")
+
+    $("#modal_species").modal('hide')
+    GetSpeciesList()
+
+}
+
+
+$("#btn_search").click(function () {
+    GetSpeciesList()
+    
+});
+
+
+
+function GetSpeciesList() {
+    $('#result_table > tbody tr').remove()
+    
+    request_data = {
+        "vietnamesename" : $("#txt_vietnamesename").val(),
+        "englishname" : $("#txt_englishname").val(),
+        "description" : txt_detail.value,
+        "search_string": $("#txt_search").val(),
+        "token": Cookies.get("token")
+    }
+    
+    host_request = gethost() + '/api/species/gets'
+    ajaxRequest("POST", host_request, request_data, onSearchSuccess, genericFailCB)
+}
+
+
+function onSearchSuccess(res) {
+
+    var index = 1
+    g_species = res.objects
+
+    if(g_species.length == 0)
+    {
+        ShowToast("Không tìm giống hoa")
+    }
+    for (i = 0; i < g_species.length; i++) {
+        $('#result_table > tbody:last-child').append(genRow(g_species[i], index++))
+    }
+    $("#search_result").show()
+}
+
+function genRow(species, order) {
+    row = '<tr class="trow" id="' + species._id.$oid + '">' +
+        "<td>" + order + "</td>" +
+        "<td>" + species.vietnamesename + "</td>" +
+        "<td>" + species.englishname + "</td>" +
+        //"<td>" + species.description + "</td>" +
+
+        "</tr>"
+    return row
+}
+
+$("#result_table").on("click", "tbody tr", function (event) {
+    //handle row click
+    g_species_pk = this.id
+    species = GetObjectByPk(g_species, this.id)
+    //console.log(org)
+
+    $("#txt_vietnamesename").val(species.vietnamesename),
+    $("#txt_englishname").val(species.englishname),
+    txt_detail.value =  species.description,
+
+    $("#btn_delete").show()
+    $("#btn_update").show()
+    $("#btn_create").hide()
+   // $("#btn_approve").show()
+
+    if (species == null) {
+        showError("Không lấy được thông tin member, vui lòng tìm kiếm lại!")
+        return
+    }
+    //Show modal
+    $("#modal_species").modal()
+});
+
+
+$("#btn_showModal").click(function () {
+    $("#btn_delete").hide()
+    $("#btn_update").hide()
+    $("#btn_approve").hide()
+
+
+    $("#modal_species").modal()
+})
+
+$("#btn_update").click(function () {
+    request_data = {
+        "pk" : g_species_pk,
+        "vietnamesename" : $("#txt_vietnamesename").val(),
+        "englishname" : $("#txt_englishname").val(),
+        "description" :txt_detail.value,
+        "token": Cookies.get("token")
+    }
+
+    host_request = gethost() + '/api/species/update'
+    ajaxRequest("POST", host_request, request_data, onEditSuccess, genericFailCB)
+});
+
+function onEditSuccess(res) {
+    $("#modal_species").modal('hide')
+    ShowToast(res["Success"])
+ 
+    GetSpeciesList()
+}
+
+// $("#btn_approve").click(function () {
+//     //reset password api
+//     request_data = {
+//         "status": "Approved",
+//         "email": $("#txt_email").val(),
+//         "description" :txt_detail.value,
+//         "token": Cookies.get("token")
+//     }
+//     host_request = gethost() + "/api/species/update"
+//     ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+// })
+
+$("#btn_delete").click(function () {
+    //remove org
+    request_data = {
+        "pk" : g_species_pk,
+        "vietnamesename" : $("#txt_vietnamesename").val(),
+        "description" :txt_detail.value,
+        "englishname" : $("#txt_englishname").val(),
+        "token": Cookies.get("token")
+    }
+    host_request = gethost() + "/api/species/delete"
+    ajaxRequest("POST", host_request, request_data, updateSuccessAndClose, genericFailCB);
+})
+
+function updateSuccessAndClose(res) {
+    $("#modal_species").modal('hide')
+    $('#result_table > tbody tr').remove()
+    //ShowToast(res["Success"]) 
+    GetSpeciesList()
+}
+
+ </script>
+
+{% endblock %}

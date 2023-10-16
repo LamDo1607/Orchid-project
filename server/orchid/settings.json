@@ -1,0 +1,26 @@
+{
+    "version" : "0.0.1",
+    "secrect_key" : "flKCXUnlaquvzTYFEVMxFMBmXbRACu",
+    "mongodb" : {
+        "release" : {
+            "host": "127.0.0.1",
+            "user" : "vohungvi",
+            "password": "viscomsolution",
+            "db_name" : "orchid"
+        },
+        "debug" : {
+            "host": "127.0.0.1",
+            "user" : "vohungvi",
+            "password": "viscomsolution",
+            "db_name" : "orchid"            
+        }
+    },
+	"email" : {
+        "host": "smtp.gmail.com",
+        "port": "587",
+        "user": "vohungvi27@gmail.com",
+        "password" : "cluzipfnnghgafrv",
+        "from_email" : "support@viscomsolution.com",
+        "mainpassword" : "Covid19sequa"
+    }
+}
